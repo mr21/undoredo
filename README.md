@@ -7,8 +7,12 @@ This is the [*GridSound*](https://github.com/gridsound/daw)'s undoredo JavaScrip
 ``` javascript
 var undoredo = new Undoredo();
 
-undoredo.onchange = function( actionObject, valuePath, value, previousValue ) {
-  console.log( `onchange "${ valuePath }": ${ previousValue } -> ${ value }` );
+undoredo.onchange = function( obj ) {
+  console.log( "onchange", obj );
+};
+
+undoredo.onassign = function( valuePath, val, previousValue ) {
+  console.log( `onassign "${ valuePath }": ${ previousValue } -> ${ value }` );
 };
 
 undoredo.init( {
@@ -27,19 +31,22 @@ undoredo.change( {
   }
 } );
 
-// onchange "stock.diamond": 0 -> 5
-// onchange "stock.gold": 0 -> 21
-// onchange "stock.sapphire": undefined -> 1
+// onassign "stock.diamond": 0 -> 5
+// onassign "stock.gold": 0 -> 21
+// onassign "stock.sapphire": undefined -> 1
+// onchange {stock:{diamond:5,gold:21,sapphire:1}}
 
 undoredo.undo();
 
-// onchange "stock.diamond": 5 -> 0
-// onchange "stock.gold": 21 -> 0
-// onchange "stock.sapphire": 1 -> undefined (deleted)
+// onassign "stock.diamond": 5 -> 0
+// onassign "stock.gold": 21 -> 0
+// onassign "stock.sapphire": 1 -> undefined
+// onchange {stock:{diamond:0,gold:0,sapphire:undefined}}
 
 undoredo.redo();
 
-// onchange "stock.diamond": 0 -> 5
-// onchange "stock.gold": 0 -> 21
-// onchange "stock.sapphire": undefined -> 1
+// onassign "stock.diamond": 0 -> 5
+// onassign "stock.gold": 0 -> 21
+// onassign "stock.sapphire": undefined -> 1
+// onchange {stock:{diamond:5,gold:21,sapphire:1}}
 ```
